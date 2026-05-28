@@ -1,0 +1,270 @@
+/* hospex-edge calendar styles — slim port of Hospex calendar.css.
+   Design tokens up top, then layout, grid, pills, drawer. */
+
+:root {
+  --bg: #0f1115;
+  --surface: #161a22;
+  --surface-2: #1d2230;
+  --line: #262c3a;
+  --line-strong: #353c4d;
+  --text: #e7ebf3;
+  --text-dim: #9aa3b2;
+  --text-faint: #6b7283;
+  --accent: #5b9dff;
+  --accent-2: #7be3c4;
+  --warn: #ffb454;
+  --danger: #ff6b6b;
+  --weekend: #1a1f2b;
+  --today: rgba(91, 157, 255, 0.08);
+
+  /* Source colors */
+  --src-BC: #2d8cff;
+  --src-AB: #ff5a5f;
+  --src-EX: #ffc629;
+  --src-DR: #7be3c4;
+
+  --row-h: 56px;
+  --head-h: 48px;
+  --room-col-w: 220px;
+  --day-w: 96px;
+  --radius: 8px;
+  --pill-h: 40px;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; height: 100%; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font: 14px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+}
+
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; }
+
+.muted { color: var(--text-dim); }
+.small { font-size: 12px; }
+
+.app {
+  display: grid;
+  grid-template-rows: 52px 48px 1fr 32px;
+  height: 100vh;
+}
+
+/* Topbar ------------------------------------------------------------- */
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 0 16px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+}
+.brand { display: flex; align-items: center; gap: 8px; font-weight: 600; }
+.brand-mark { font-size: 18px; }
+.brand-name em { color: var(--accent); font-style: normal; }
+.nav { display: flex; gap: 4px; margin-left: 24px; }
+.nav-item {
+  padding: 6px 10px;
+  border-radius: 6px;
+  color: var(--text-dim);
+  cursor: pointer;
+}
+.nav-item.active { background: var(--surface-2); color: var(--text); }
+.nav-item[aria-disabled="true"] { opacity: 0.5; cursor: not-allowed; }
+.topright { margin-left: auto; color: var(--text-dim); }
+
+/* Toolbar ------------------------------------------------------------ */
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 16px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+}
+.datebar { display: flex; align-items: center; gap: 8px; }
+.spanbar { display: flex; gap: 4px; margin-left: auto; }
+.btn {
+  display: inline-flex; align-items: center;
+  padding: 5px 10px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--text);
+}
+.btn:hover { border-color: var(--line-strong); }
+.btn.primary { background: var(--accent); color: #0a0d14; border-color: var(--accent); font-weight: 600; }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.chip {
+  padding: 4px 10px;
+  font-size: 12px;
+  color: var(--text-dim);
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  cursor: pointer;
+}
+.chip.active { background: var(--accent); color: #0a0d14; border-color: var(--accent); font-weight: 600; }
+.month-label { margin-left: 12px; color: var(--text-dim); font-weight: 500; }
+
+/* Grid --------------------------------------------------------------- */
+.grid-wrap {
+  overflow: auto;
+  background: var(--bg);
+}
+.grid {
+  display: grid;
+  grid-template-columns: var(--room-col-w) repeat(var(--days), var(--day-w));
+  position: relative;
+  min-width: max-content;
+}
+.head-cell {
+  position: sticky; top: 0;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+  z-index: 3;
+  height: var(--head-h);
+  display: flex; align-items: center; justify-content: center;
+}
+.room-col {
+  position: sticky; left: 0;
+  background: var(--surface);
+  border-right: 1px solid var(--line);
+  padding: 8px 12px;
+  z-index: 2;
+}
+.grid-head .room-col { z-index: 4; padding: 0 12px; justify-content: flex-start; font-weight: 600; }
+
+.day-label { font-size: 12px; color: var(--text-dim); }
+.day-cell {
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  height: var(--row-h);
+  position: relative;
+}
+.day-cell.weekend { background: var(--weekend); }
+.day-cell.today { background: var(--today); }
+.head-cell.today .day-label { color: var(--accent); font-weight: 600; }
+
+.group-head {
+  display: contents;
+}
+.group-head .room-col {
+  height: 36px;
+  padding: 6px 12px;
+  background: var(--surface-2);
+}
+.group-name { font-weight: 600; }
+.group-beds { font-size: 11px; color: var(--text-dim); }
+.group-fill {
+  height: 36px;
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--line);
+}
+
+.room-row { display: contents; }
+.room-num { font-weight: 600; }
+.room-meta { display: flex; gap: 8px; font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+.room-status {
+  padding: 1px 6px; border-radius: 999px;
+  background: var(--line); color: var(--text-dim);
+}
+.status-clean { background: rgba(123, 227, 196, 0.15); color: var(--accent-2); }
+.status-dirty { background: rgba(255, 180, 84, 0.15); color: var(--warn); }
+.status-ooo   { background: rgba(255, 107, 107, 0.15); color: var(--danger); }
+
+/* Pills -------------------------------------------------------------- */
+.pill {
+  grid-row: auto;
+  align-self: center;
+  margin-top: 6px;
+  height: var(--pill-h);
+  padding: 4px 10px;
+  border: none;
+  border-radius: 6px;
+  background: var(--src-DR);
+  color: #0a0d14;
+  text-align: left;
+  cursor: pointer;
+  display: flex; flex-direction: column; justify-content: center;
+  overflow: hidden;
+  white-space: nowrap;
+  z-index: 1;
+  position: relative;
+}
+.pill.src-BC { background: var(--src-BC); color: #fff; }
+.pill.src-AB { background: var(--src-AB); color: #fff; }
+.pill.src-EX { background: var(--src-EX); color: #1a1a1a; }
+.pill.src-DR { background: var(--src-DR); color: #0a0d14; }
+.pill.status-partial { box-shadow: inset 0 0 0 2px rgba(255, 180, 84, 0.7); }
+.pill.status-ota_collect { opacity: 0.85; }
+.pill.clip-l { border-top-left-radius: 0; border-bottom-left-radius: 0; }
+.pill.clip-r { border-top-right-radius: 0; border-bottom-right-radius: 0; }
+.pill:hover { filter: brightness(1.1); }
+.pill-guest { font-weight: 600; font-size: 12px; overflow: hidden; text-overflow: ellipsis; }
+.pill-meta { font-size: 10px; opacity: 0.8; }
+
+/* Statusbar ---------------------------------------------------------- */
+.statusbar {
+  display: flex; align-items: center; gap: 12px;
+  padding: 0 16px;
+  background: var(--surface);
+  border-top: 1px solid var(--line);
+  color: var(--text-dim);
+  font-size: 12px;
+}
+
+/* Drawer ------------------------------------------------------------- */
+#drawer { position: fixed; top: 0; right: 0; height: 100%; pointer-events: none; }
+#drawer > * { pointer-events: auto; }
+.drawer {
+  width: 380px; height: 100%;
+  background: var(--surface);
+  border-left: 1px solid var(--line);
+  padding: 20px;
+  overflow-y: auto;
+  box-shadow: -8px 0 24px rgba(0,0,0,0.3);
+  animation: slide-in 0.18s ease-out;
+}
+@keyframes slide-in {
+  from { transform: translateX(20px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+.drawer-head {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+.drawer-ref { color: var(--text-dim); font-size: 12px; font-family: ui-monospace, monospace; }
+.drawer-guest { font-size: 18px; font-weight: 600; margin-top: 2px; }
+.drawer-close {
+  background: none; border: none; color: var(--text-dim);
+  font-size: 24px; cursor: pointer; line-height: 1;
+}
+.drawer-close:hover { color: var(--text); }
+.drawer-row {
+  display: flex; justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+}
+.drawer-label { color: var(--text-dim); font-size: 12px; }
+.drawer-status { font-weight: 600; }
+.drawer-status.status-in       { color: var(--accent); }
+.drawer-status.status-paid     { color: var(--accent-2); }
+.drawer-status.status-partial  { color: var(--warn); }
+.drawer-status.status-ota_collect { color: var(--text-dim); }
+.drawer-h4 { margin: 20px 0 8px; font-size: 12px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.04em; }
+.drawer-stays { list-style: none; padding: 0; margin: 0; }
+.drawer-stays li {
+  padding: 10px 12px;
+  background: var(--surface-2);
+  border-radius: 6px;
+  margin-bottom: 6px;
+}
+.drawer-actions {
+  display: flex; gap: 8px;
+  margin-top: 20px;
+}

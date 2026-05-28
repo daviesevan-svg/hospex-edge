@@ -1,0 +1,23 @@
+name = "hospex-edge"
+main = "src/index.tsx"
+compatibility_date = "2024-12-18"
+compatibility_flags = ["nodejs_compat"]
+
+[assets]
+directory = "./public"
+binding = "ASSETS"
+
+# Future: D1 binding for real persistence
+# [[d1_databases]]
+# binding = "DB"
+# database_name = "hospex"
+# database_id = "<fill-in-after-wrangler-d1-create>"
+
+# Future: Durable Object for per-property booking serialization
+# [[durable_objects.bindings]]
+# name = "PROPERTY"
+# class_name = "PropertyDO"
+
+# [[migrations]]
+# tag = "v1"
+# new_classes = ["PropertyDO"]
